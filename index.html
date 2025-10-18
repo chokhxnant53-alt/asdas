@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="https://flashexpress.com/favicon.ico" type="image/x-icon">
   <title>Flash Express</title>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: "Prompt", sans-serif;
@@ -71,7 +70,6 @@
     }
     .news img { width: 40px; height: 40px; }
 
-    /* ✅ Footer */
     footer {
       position: fixed;
       bottom: 0;
@@ -163,62 +161,46 @@
     <a href="account.html">👤<br><span>บัญชี</span></a>
   </footer>
 
-  <!-- ✅ เชื่อม Firebase -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getDatabase, ref, get, set, onValue } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
-
-    // 🔧 Config Firebase ของคุณ
-    const firebaseConfig = {
-      apiKey: "AIzaSyALSOECmTwrVr0RQAp_b632HmxQ0sJvLMw",
-      authDomain: "flash-claim-system.firebaseapp.com",
-      databaseURL: "https://flash-claim-system-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "flash-claim-system",
-      storageBucket: "flash-claim-system.firebasestorage.app",
-      messagingSenderId: "369180040049",
-      appId: "1:369180040049:web:6753f5e48a23bc6737b4d0",
-      measurementId: "G-VLVBY60G3Q"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-
-    const balanceDisplay = document.getElementById("balance");
-    const info = document.getElementById("customerInfo");
+  <script>
+    // ✅ โหลดข้อมูลลูกค้าและยอดเงิน
+    const balances = JSON.parse(localStorage.getItem("customer_balances")) || {};
     const activeCustomer = localStorage.getItem("active_customer");
+    const display = document.getElementById("balance");
+    const info = document.getElementById("customerInfo");
+    let customerData = JSON.parse(localStorage.getItem("customer_data")) || {};
 
+    // ✅ ตรวจสอบการล็อกอิน
     if (!activeCustomer) {
+      alert("⚠️ กรุณาเข้าสู่ระบบก่อนเข้าใช้งาน");
       window.location.href = "login-customer.html";
     } else {
       info.textContent = `เบอร์: ${activeCustomer}`;
-      loadCustomer(activeCustomer);
-    }
 
-    async function loadCustomer(phone) {
-      const dbRef = ref(db, "customers/" + phone);
-
-      // ✅ ถ้ายังไม่มีข้อมูลลูกค้า ให้สร้างใหม่
-      const snapshot = await get(dbRef);
-      if (!snapshot.exists()) {
-        await set(dbRef, {
-          phone: phone,
-          wallet_balance: 0,
-          lastTransaction: "ยังไม่มีธุรกรรม",
-          createdAt: new Date().toLocaleString("th-TH")
-        });
+      if (!customerData[activeCustomer]) {
+        customerData[activeCustomer] = {
+          phone: activeCustomer,
+          createdAt: new Date().toLocaleString("th-TH"),
+          wallet_balance: balances[activeCustomer] || 0,
+          lastTransaction: "ยังไม่มีธุรกรรม"
+        };
+      } else {
+        customerData[activeCustomer].wallet_balance = balances[activeCustomer] || 0;
       }
 
-      // ✅ ฟังข้อมูลแบบเรียลไทม์
-      onValue(dbRef, (snap) => {
-        const data = snap.val();
-        const balance = data?.wallet_balance || 0;
-        balanceDisplay.textContent = parseFloat(balance).toLocaleString("th-TH", {
-          minimumFractionDigits: 2
-        });
-      });
+      localStorage.setItem("customer_data", JSON.stringify(customerData));
+      updateDisplay();
     }
 
-    // ✅ Footer Active
+    // ✅ ฟังก์ชันแสดงยอดปัจจุบัน
+    function updateDisplay() {
+      const balance = balances[activeCustomer] || 0;
+      display.textContent = balance.toLocaleString("th-TH", { minimumFractionDigits: 2 });
+    }
+
+    // ✅ โหลดยอดล่าสุดทุกครั้งเมื่อเปิดหน้า
+    window.addEventListener("load", updateDisplay);
+
+    // ✅ Footer active อัตโนมัติ
     document.querySelectorAll("footer a").forEach(a => {
       if (a.href.includes(location.pathname.split("/").pop())) {
         a.classList.add("active");

@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" href="https://flashexpress.com/favicon.ico" type="image/x-icon" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="https://flashexpress.com/favicon.ico" type="image/x-icon">
   <title>บัญชีของฉัน | Flash Express</title>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
     body {
@@ -42,198 +42,197 @@
       text-align: left;
     }
 
-    .card h3 { text-align:center;color:purple;margin-top:0; }
-    .info p { margin:8px 0; }
+    .card h3 {
+      text-align: center;
+      color: purple;
+      margin-top: 0;
+    }
+
+    .info p { margin: 8px 0; }
 
     input {
-      width:100%;
-      padding:8px;
-      border:1px solid #ccc;
-      border-radius:6px;
-      margin-top:3px;
-      box-sizing:border-box;
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-top: 3px;
+      box-sizing: border-box;
     }
 
     button {
-      display:block;
-      margin:15px auto;
-      font-size:16px;
-      border:none;
-      border-radius:8px;
-      padding:10px 20px;
-      cursor:pointer;
-      transition:0.2s;
+      display: block;
+      margin: 15px auto;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: 0.2s;
     }
 
-    button.save-btn { background:#4caf50;color:white;width:80%;max-width:250px; }
-    button#editBtn { background:#ffeb3b;color:#000;font-weight:bold;width:80%;max-width:250px; }
-    button:hover { transform:scale(0.97); }
+    button.save-btn {
+      background: #4CAF50;
+      color: white;
+      width: 80%;
+      max-width: 250px;
+    }
 
-    a { display:block;margin-top:10px;color:purple;text-decoration:none;font-size:14px; }
+    button#editBtn {
+      background: #ffeb3b;
+      color: #000;
+      font-weight: bold;
+      width: 80%;
+      max-width: 250px;
+    }
+
+    button:hover { transform: scale(0.97); }
+
+    a {
+      display: block;
+      margin-top: 10px;
+      color: purple;
+      text-decoration: none;
+      font-size: 14px;
+    }
 
     footer {
-      position:fixed;
-      bottom:0;
-      left:0;
-      width:100%;
-      background:white;
-      border-top:1px solid #ddd;
-      display:flex;
-      justify-content:space-around;
-      padding:8px 0;
-      font-size:12px;
-      box-shadow:0 -2px 4px rgba(0,0,0,0.05);
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: white;
+      border-top: 1px solid #ddd;
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 0;
+      font-size: 12px;
+      box-shadow: 0 -2px 4px rgba(0,0,0,0.05);
     }
-    footer a { text-align:center;text-decoration:none;color:#333; }
+    footer a { text-align: center; text-decoration: none; color: #333; }
 
-    @media (max-width:600px){
-      .container{padding:10px;}
-      .card{padding:15px;}
-      input{font-size:15px;}
-      button{font-size:15px;}
+    @media (max-width: 600px) {
+      .container { padding: 10px; }
+      .card { padding: 15px; }
+      input { font-size: 15px; }
+      button { font-size: 15px; }
     }
   </style>
 </head>
 <body>
 
-<header>👤 บัญชีของฉัน</header>
+  <header>👤 บัญชีของฉัน</header>
 
-<div class="container">
-  <div class="card">
-    <h3>ข้อมูลผู้ใช้</h3>
-    <div class="info" id="infoBox"></div>
+  <div class="container">
+    <div class="card">
+      <h3>ข้อมูลผู้ใช้</h3>
+      <div class="info" id="infoBox"></div>
+    </div>
+
+    <div class="card" id="bankCard">
+      <h3>บัญชีธนาคาร</h3>
+      <div class="info" id="bankInfoBox"></div>
+    </div>
+
+    <button id="editBtn" onclick="enableEdit()">✏️ แก้ไขข้อมูล</button>
+    <button id="saveBtn" class="save-btn" style="display:none;" onclick="saveData()">💾 บันทึก</button>
+    <a href="index.html">← กลับหน้าหลัก</a>
   </div>
 
-  <div class="card" id="bankCard">
-    <h3>บัญชีธนาคาร</h3>
-    <div class="info" id="bankInfoBox"></div>
-  </div>
+  <footer>
+    <a href="index.html">🏠<br>หน้าหลัก</a>
+    <a href="news.html">📰<br>ข่าวสาร</a>
+    <a href="transaction.html">💰<br>ธุรกรรม</a>
+    <a href="account.html" style="color: purple;">👤<br><b>บัญชี</b></a>
+  </footer>
 
-  <button id="editBtn" onclick="enableEdit()">✏️ แก้ไขข้อมูล</button>
-  <button id="saveBtn" class="save-btn" style="display:none;" onclick="saveData()">💾 บันทึก</button>
-  <a href="index.html">← กลับหน้าหลัก</a>
-</div>
-
-<footer>
-  <a href="index.html">🏠<br>หน้าหลัก</a>
-  <a href="news.html">📰<br>ข่าวสาร</a>
-  <a href="transaction.html">💰<br>ธุรกรรม</a>
-  <a href="account.html" style="color: purple;"><b>👤<br>บัญชี</b></a>
-</footer>
-
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-  import { getDatabase, ref, get, update, set } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
-
-  // 🔥 ตั้งค่า Firebase
-  const firebaseConfig = {
-    apiKey: "AIzaSyALSOECmTwrVr0RQAp_b632HmxQ0sJvLMw",
-    authDomain: "flash-claim-system.firebaseapp.com",
-    databaseURL: "https://flash-claim-system-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "flash-claim-system",
-    storageBucket: "flash-claim-system.firebasestorage.app",
-    messagingSenderId: "369180040049",
-    appId: "1:369180040049:web:6753f5e48a23bc6737b4d0",
-    measurementId: "G-VLVBY60G3Q"
-  };
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-
-  // ✅ ตรวจสอบโหมด
-  const params = new URLSearchParams(window.location.search);
-  const phoneParam = params.get("phone");
-  let activeCustomer = phoneParam || localStorage.getItem("active_customer");
-
-  // ถ้ายังไม่ล็อกอินให้กรอกเบอร์เพื่อสร้างบัญชีใหม่
-  if (!activeCustomer) {
-    const inputPhone = prompt("กรุณากรอกเบอร์โทรศัพท์เพื่อสร้างบัญชีใหม่:");
-    if (inputPhone && inputPhone.trim() !== "") {
-      activeCustomer = inputPhone.trim();
-      localStorage.setItem("active_customer", activeCustomer);
-      await set(ref(db, "customers/" + activeCustomer), {
-        phone: activeCustomer,
-        createdAt: new Date().toLocaleString("th-TH"),
-        wallet_balance: 0
-      });
-      alert("✅ สร้างบัญชีใหม่เรียบร้อยแล้ว");
-    } else {
-      alert("❌ ต้องกรอกเบอร์โทรศัพท์ก่อนใช้งาน");
-      window.location.href = "index.html";
+  <script>
+    const activeCustomer = localStorage.getItem("active_customer");
+    if (!activeCustomer) {
+      alert("⚠️ กรุณาเข้าสู่ระบบก่อน");
+      window.location.href = "login-customer.html";
     }
-  }
 
-  const infoBox = document.getElementById("infoBox");
-  const bankBox = document.getElementById("bankInfoBox");
-  const editBtn = document.getElementById("editBtn");
-  const saveBtn = document.getElementById("saveBtn");
-  let userData = {};
-  let isAdminView = !!phoneParam;
+    const infoBox = document.getElementById("infoBox");
+    const bankBox = document.getElementById("bankInfoBox");
+    const editBtn = document.getElementById("editBtn");
+    const saveBtn = document.getElementById("saveBtn");
 
-  // โหลดข้อมูล
-  async function loadData() {
-    const snapshot = await get(ref(db, "customers/" + activeCustomer));
-    if (snapshot.exists()) {
-      userData = snapshot.val();
-      renderData();
-    } else {
-      infoBox.innerHTML = "<p>❌ ไม่พบข้อมูลลูกค้า</p>";
-      editBtn.style.display = "none";
-    }
-    if (isAdminView) {
-      editBtn.style.display = "none"; // แอดมินดูอย่างเดียว
-      saveBtn.style.display = "none";
-    }
-  }
+    // ✅ โหลดข้อมูลเฉพาะของเบอร์ที่กำลังล็อกอิน
+    let userKey = `user_info_${activeCustomer}`;
+    let bankKey = `bank_info_${activeCustomer}`;
 
-  // แสดงข้อมูล
-  function renderData() {
-    infoBox.innerHTML = `
-      <p>ชื่อ: ${userData.name || "-"}</p>
-      <p>เบอร์โทรศัพท์: ${userData.phone || activeCustomer}</p>
-      <p>อีเมล: ${userData.email || "-"}</p>
-      <p>ยอดเงินคงเหลือ: ${(userData.wallet_balance || 0).toLocaleString("th-TH", { minimumFractionDigits: 2 })} ฿</p>
-    `;
-    bankBox.innerHTML = `
-      <p>ชื่อธนาคาร: ${userData.bankName || "-"}</p>
-      <p>เลขบัญชี: ${userData.accountNumber || "-"}</p>
-      <p>ชื่อเจ้าของบัญชี: ${userData.accountOwner || "-"}</p>
-    `;
-  }
-
-  // เปิดโหมดแก้ไข
-  function enableEdit() {
-    if (isAdminView) return alert("🔒 โหมดดูเท่านั้น (Admin)");
-    infoBox.innerHTML = `
-      <p>ชื่อ: <input id="name" value="${userData.name || ""}"></p>
-      <p>เบอร์โทรศัพท์: <input id="phone" value="${activeCustomer}" disabled></p>
-      <p>อีเมล: <input id="email" value="${userData.email || ""}"></p>
-    `;
-    bankBox.innerHTML = `
-      <p>ชื่อธนาคาร: <input id="bankName" value="${userData.bankName || ""}"></p>
-      <p>เลขบัญชี: <input id="accountNumber" value="${userData.accountNumber || ""}"></p>
-      <p>ชื่อเจ้าของบัญชี: <input id="accountOwner" value="${userData.accountOwner || ""}"></p>
-    `;
-    editBtn.style.display = "none";
-    saveBtn.style.display = "block";
-  }
-
-  // บันทึกข้อมูล
-  async function saveData() {
-    const updates = {
-      name: document.getElementById("name").value.trim(),
-      email: document.getElementById("email").value.trim(),
-      bankName: document.getElementById("bankName").value.trim(),
-      accountNumber: document.getElementById("accountNumber").value.trim(),
-      accountOwner: document.getElementById("accountOwner").value.trim()
+    let userData = JSON.parse(localStorage.getItem(userKey)) || {
+      name: "",
+      phone: activeCustomer,
+      email: ""
     };
-    await update(ref(db, "customers/" + activeCustomer), updates);
-    alert("✅ บันทึกข้อมูลเรียบร้อยแล้ว");
-    saveBtn.style.display = "none";
-    editBtn.style.display = "block";
-    loadData();
-  }
 
-  loadData();
-</script>
+    let bankData = JSON.parse(localStorage.getItem(bankKey)) || {
+      bankName: "",
+      accountNumber: "",
+      accountOwner: ""
+    };
+
+    // ✅ แสดงข้อมูล
+    function renderData() {
+      infoBox.innerHTML = `
+        <p>ชื่อ: ${userData.name || "-"}</p>
+        <p>เบอร์โทรศัพท์: ${userData.phone || activeCustomer}</p>
+        <p>อีเมล: ${userData.email || "-"}</p>
+      `;
+      bankBox.innerHTML = `
+        <p>ชื่อธนาคาร: ${bankData.bankName || "-"}</p>
+        <p>เลขบัญชี: ${bankData.accountNumber || "-"}</p>
+        <p>ชื่อเจ้าของบัญชี: ${bankData.accountOwner || "-"}</p>
+      `;
+    }
+
+    renderData();
+
+    // ✅ เปิดโหมดแก้ไข
+    function enableEdit() {
+      infoBox.innerHTML = `
+        <p>ชื่อ: <input id="name" value="${userData.name}"></p>
+        <p>เบอร์โทรศัพท์: <input id="phone" value="${userData.phone}" disabled></p>
+        <p>อีเมล: <input id="email" value="${userData.email}"></p>
+      `;
+      bankBox.innerHTML = `
+        <p>ชื่อธนาคาร: <input id="bankName" value="${bankData.bankName}"></p>
+        <p>เลขบัญชี: <input id="accountNumber" value="${bankData.accountNumber}"></p>
+        <p>ชื่อเจ้าของบัญชี: <input id="accountOwner" value="${bankData.accountOwner}"></p>
+      `;
+      editBtn.style.display = "none";
+      saveBtn.style.display = "block";
+
+      // 🟡 รองรับการกด Enter เพื่อบันทึก
+      document.addEventListener("keypress", e => {
+        if (e.key === "Enter") saveData();
+      });
+    }
+
+    // ✅ ฟังก์ชันบันทึกข้อมูล
+    function saveData() {
+      userData = {
+        name: document.getElementById("name").value.trim(),
+        phone: activeCustomer,
+        email: document.getElementById("email").value.trim()
+      };
+      bankData = {
+        bankName: document.getElementById("bankName").value.trim(),
+        accountNumber: document.getElementById("accountNumber").value.trim(),
+        accountOwner: document.getElementById("accountOwner").value.trim()
+      };
+
+      // 🔹 บันทึกแยกตามเบอร์
+      localStorage.setItem(userKey, JSON.stringify(userData));
+      localStorage.setItem(bankKey, JSON.stringify(bankData));
+
+      alert("✅ บันทึกข้อมูลเรียบร้อยแล้ว");
+      saveBtn.style.display = "none";
+      editBtn.style.display = "block";
+      renderData();
+    }
+  </script>
+
 </body>
 </html>

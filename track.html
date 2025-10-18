@@ -148,8 +148,10 @@ button:hover { transform: scale(0.97); }
   </div>
 
   <br>
-  <button class="white" onclick="backToInput()">กลับไปกรอกใหม่</button>
-</div>
+<a href="index.html" style="text-decoration:none;">
+  <button class="white">← กลับหน้าหลัก</button>
+</a>
+
 
 <script>
 // ✅ ตรวจสอบเบอร์โทร
@@ -184,9 +186,9 @@ function resetForm() {
 
 // ✅ กลับไปกรอกใหม่
 function backToInput() {
-  document.getElementById("step1").style.display = "block";
-  document.getElementById("step2").style.display = "none";
+  window.location.href = "index.html"; // กลับไปหน้าหลัก
 }
+
 
 // ✅ วันที่แบบไทย
 function formatThaiDate(date, timeText) {
