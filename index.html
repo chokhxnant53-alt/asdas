@@ -6,110 +6,21 @@
   <link rel="icon" href="https://flashexpress.com/favicon.ico" type="image/x-icon">
   <title>Flash Express</title>
   <style>
-    body {
-      font-family: "Prompt", sans-serif;
-      background-color: #fffbea;
-      margin: 0;
-      padding: 0;
-    }
-
-    header {
-      background-color: #ffeb3b;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 20px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
+    body { font-family: "Prompt", sans-serif; background-color: #fffbea; margin: 0; padding: 0; }
+    header { background-color: #ffeb3b; display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
     .title { font-weight: bold; font-size: 20px; }
-
-    .wallet {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-      margin: 20px;
-      padding: 20px;
-      text-align: center;
-    }
+    .wallet { background: white; border-radius: 12px; box-shadow: 0 3px 6px rgba(0,0,0,0.1); margin: 20px; padding: 20px; text-align: center; }
     .wallet h3 { color: purple; margin: 0 0 10px 0; }
     .amount { font-size: 36px; font-weight: bold; color: black; }
     .subtext { color: #555; font-size: 14px; margin-bottom: 10px; }
-
     .section { margin: 25px; }
-    .section h3 { margin-bottom: 10px; }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap: 15px;
-    }
-    .card {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.05);
-      text-align: center;
-      padding: 15px;
-      transition: 0.3s;
-      text-decoration: none;
-      color: black;
-    }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; }
+    .card { background: white; border-radius: 12px; box-shadow: 0 3px 6px rgba(0,0,0,0.05); text-align: center; padding: 15px; transition: 0.3s; text-decoration: none; color: black; }
     .card:hover { transform: translateY(-5px); }
     .card img { width: 40px; height: 40px; margin-bottom: 10px; }
-
-    .news {
-      background: #fff;
-      border-radius: 12px;
-      padding: 15px;
-      margin-bottom: 15px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .news img { width: 40px; height: 40px; }
-
-    footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background: #fff;
-      border-top: 2px solid #ffeb3b;
-      box-shadow: 0 -3px 8px rgba(0,0,0,0.08);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      padding: 10px 0;
-      z-index: 999;
-    }
-    footer a {
-      text-align: center;
-      text-decoration: none;
-      color: #444;
-      font-size: 13px;
-      flex: 1;
-      transition: 0.2s;
-    }
-    footer a span { display: block; margin-top: 3px; }
+    footer { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; border-top: 2px solid #ffeb3b; display: flex; justify-content: space-around; padding: 10px 0; z-index: 999; }
+    footer a { text-align: center; text-decoration: none; color: #444; font-size: 13px; flex: 1; }
     footer a.active { color: #6a1b9a; font-weight: 700; }
-    footer a.active::after {
-      content: "";
-      display: block;
-      width: 40%;
-      height: 3px;
-      background-color: #6a1b9a;
-      margin: 5px auto 0;
-      border-radius: 3px;
-    }
-    footer a:hover { transform: translateY(-2px); color: #000; }
-
-    @media (max-width: 600px) {
-      .wallet { margin: 15px; padding: 15px; }
-      .amount { font-size: 30px; }
-      footer { font-size: 12px; padding: 8px 0; }
-    }
   </style>
 </head>
 <body>
@@ -125,35 +36,6 @@
     <div class="subtext" id="customerInfo">เบอร์: -</div>
   </div>
 
-  <div class="section">
-    <h3>บริการของเรา</h3>
-    <div class="grid">
-      <a class="card" href="send.html"><img src="009daed7-4504-4ea4-b8fd-6e7c32172f57.png"><div>ส่งพัสดุ</div></a>
-      <a class="card" href="track.html"><img src="807d420f-bfc5-4adf-a2b0-8c323c81a328.png"><div>ติดตามพัสดุ</div></a>
-      <a class="card" href="bind.html"><img src="cb0176e4-5794-4790-b581-4169b7b1f2d8.png"><div>ผูกบัญชี</div></a>
-      <a class="card" href="claim.html"><img src="17c78dd9-aed8-4024-bd45-095121937a91.png"><div>เคลม</div></a>
-      <a class="card" href="update.html"><img src="2d3f6070-97ac-4c0c-8608-917e801eecf2.png"><div>อัปเดตข้อมูล</div></a>
-    </div>
-  </div>
-
-  <div class="section">
-    <h3>ข่าวสารและโปรโมชั่น</h3>
-    <div class="news">
-      <img src="8986d714-9e66-4895-a704-73e2c4dd7178.png">
-      <div>
-        <h4>รับเงินคืน 10%</h4>
-        <p>เมื่อเติมเงินผ่านแอป Flash Express วันนี้!</p>
-      </div>
-    </div>
-    <div class="news">
-      <img src="c97ba948-d703-4629-b65b-633b947cc1f1.png">
-      <div>
-        <h4>ส่งด่วน ราคาพิเศษ</h4>
-        <p>ส่งพัสดุภายในประเทศเริ่มต้นเพียง 25 บาท</p>
-      </div>
-    </div>
-  </div>
-
   <footer>
     <a href="index.html" class="active">🏠<br><span>หน้าหลัก</span></a>
     <a href="news.html">📰<br><span>ข่าวสาร</span></a>
@@ -161,51 +43,47 @@
     <a href="account.html">👤<br><span>บัญชี</span></a>
   </footer>
 
-  <script>
-    // ✅ โหลดข้อมูลลูกค้าและยอดเงิน
-    const balances = JSON.parse(localStorage.getItem("customer_balances")) || {};
-    const activeCustomer = localStorage.getItem("active_customer");
+  <!-- Firebase SDK -->
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-database.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyALSOECmTwrVr0RQAp_b632HmxQQsJvLMw",
+  authDomain: "flash-claim-system.firebaseapp.com",
+  databaseURL: "https://flash-claim-system-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "flash-claim-system",
+  storageBucket: "flash-claim-system.firebasestorage.app",
+  messagingSenderId: "369180040049",
+  appId: "1:369180040049:web:6753f5e48a23bc6737b4d0",
+  measurementId: "G-VLVBYB6Q3Q"
+};
+
+// ✅ เริ่มใช้งาน Firebase
+const app = firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+
+
     const display = document.getElementById("balance");
     const info = document.getElementById("customerInfo");
-    let customerData = JSON.parse(localStorage.getItem("customer_data")) || {};
+    const activeCustomer = localStorage.getItem("active_customer");
 
-    // ✅ ตรวจสอบการล็อกอิน
     if (!activeCustomer) {
       alert("⚠️ กรุณาเข้าสู่ระบบก่อนเข้าใช้งาน");
       window.location.href = "login-customer.html";
     } else {
       info.textContent = `เบอร์: ${activeCustomer}`;
 
-      if (!customerData[activeCustomer]) {
-        customerData[activeCustomer] = {
-          phone: activeCustomer,
-          createdAt: new Date().toLocaleString("th-TH"),
-          wallet_balance: balances[activeCustomer] || 0,
-          lastTransaction: "ยังไม่มีธุรกรรม"
-        };
-      } else {
-        customerData[activeCustomer].wallet_balance = balances[activeCustomer] || 0;
-      }
-
-      localStorage.setItem("customer_data", JSON.stringify(customerData));
-      updateDisplay();
+      // ✅ ดึงข้อมูลยอดเงินแบบเรียลไทม์จาก Firebase
+      const ref = db.ref("customers/" + activeCustomer);
+      ref.on("value", (snapshot) => {
+        const data = snapshot.val();
+        const balance = data?.balance || 0;
+        display.textContent = parseFloat(balance).toLocaleString("th-TH", { minimumFractionDigits: 2 });
+      });
     }
-
-    // ✅ ฟังก์ชันแสดงยอดปัจจุบัน
-    function updateDisplay() {
-      const balance = balances[activeCustomer] || 0;
-      display.textContent = balance.toLocaleString("th-TH", { minimumFractionDigits: 2 });
-    }
-
-    // ✅ โหลดยอดล่าสุดทุกครั้งเมื่อเปิดหน้า
-    window.addEventListener("load", updateDisplay);
-
-    // ✅ Footer active อัตโนมัติ
-    document.querySelectorAll("footer a").forEach(a => {
-      if (a.href.includes(location.pathname.split("/").pop())) {
-        a.classList.add("active");
-      }
-    });
   </script>
 </body>
 </html>
