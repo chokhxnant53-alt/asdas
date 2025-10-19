@@ -16,7 +16,6 @@
       height: 100vh;
       margin: 0;
     }
-
     .box {
       background: white;
       padding: 30px 25px;
@@ -26,14 +25,12 @@
       width: 320px;
       max-width: 90%;
     }
-
     h2 {
       margin-top: 0;
       color: #333;
       font-size: 20px;
       font-weight: 600;
     }
-
     input {
       width: 100%;
       padding: 12px;
@@ -49,7 +46,6 @@
       border-color: #ffeb3b;
       box-shadow: 0 0 6px rgba(255, 235, 59, 0.8);
     }
-
     button {
       width: 100%;
       padding: 12px;
@@ -61,16 +57,10 @@
       font-size: 16px;
       transition: 0.2s;
     }
-    button:hover {
-      background-color: #fdd835;
-    }
+    button:hover { background-color: #fdd835; }
+    .logo { width: 80px; margin-bottom: 10px; }
 
-    .logo {
-      width: 80px;
-      margin-bottom: 10px;
-    }
-
-    /* 🔁 โหลดกำลังเข้าสู่ระบบ */
+    /* โหลด */
     .loading {
       display: none;
       position: fixed;
@@ -81,17 +71,14 @@
       flex-direction: column;
       z-index: 9999;
     }
-
     .loading img {
       width: 70px;
       animation: spin 1.3s linear infinite;
     }
-
     @keyframes spin {
       from { transform: rotate(0deg); }
       to { transform: rotate(360deg); }
     }
-
     .loading p {
       margin-top: 10px;
       font-weight: bold;
@@ -108,18 +95,17 @@
     <button onclick="login()">เข้าสู่ระบบ</button>
   </div>
 
-  <!-- 🔁 โหลดระหว่างเข้าสู่ระบบ -->
+  <!-- โหลด -->
   <div class="loading" id="loadingBox">
     <img src="https://flashexpress.com/favicon.ico" alt="Loading">
     <p>กำลังเข้าสู่ระบบ...</p>
   </div>
 
-  <!-- ✅ Firebase SDK -->
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js"></script>
 
   <script>
-    // ✅ ตั้งค่า Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyALSOECmTwrVr0RQAp_b632HmxQ0sJvLMw",
       authDomain: "flash-claim-system.firebaseapp.com",
@@ -133,25 +119,21 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // ✅ ฟังก์ชันเข้าสู่ระบบ
     async function login() {
       const phone = document.getElementById("phone").value.trim();
       const loading = document.getElementById("loadingBox");
 
-      // ✅ ตรวจสอบเบอร์โทร
       if (!/^0\d{9}$/.test(phone)) {
         alert("⚠️ กรุณากรอกเบอร์โทรให้ถูกต้อง (10 หลัก)");
         return;
       }
 
-      // ✅ แสดงโหลด
       loading.style.display = "flex";
 
       try {
         const ref = db.ref("customers/" + phone);
         const snapshot = await ref.once("value");
 
-        // ✅ ถ้ายังไม่มีข้อมูลลูกค้า → สร้างใหม่ใน Firebase
         if (!snapshot.exists()) {
           await ref.set({
             phone: phone,
@@ -161,14 +143,9 @@
           });
         }
 
-        // ✅ เก็บเบอร์โทรใน localStorage
         localStorage.setItem("active_customer", phone);
-
-        // ✅ เข้าสู่ระบบสำเร็จ
-        setTimeout(() => {
-          alert("✅ เข้าสู่ระบบสำเร็จ!");
-          window.location.href = "index.html";
-        }, 1000);
+        loading.style.display = "none";
+        window.location.href = "index.html";
 
       } catch (error) {
         alert("❌ เกิดข้อผิดพลาด: " + error.message);
