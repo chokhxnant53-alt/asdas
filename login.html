@@ -89,30 +89,60 @@
     <button onclick="login()">เข้าสู่ระบบ</button>
   </div>
 
+  <!-- ✅ Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js"></script>
+
   <script>
-    function login() {
+    // ✅ ตั้งค่า Firebase (ใช้ค่าเดียวกับ index.html)
+    const firebaseConfig = {
+      apiKey: "AIzaSyALSOECmTwrVr0RQAp_b632HmxQ0sJvLMw",
+      authDomain: "flash-claim-system.firebaseapp.com",
+      databaseURL: "https://flash-claim-system-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "flash-claim-system",
+      storageBucket: "flash-claim-system.firebasestorage.app",
+      messagingSenderId: "369180040049",
+      appId: "1:369180040049:web:6753f5e48a23bc6737b4d0",
+      measurementId: "G-VLVBY60G3Q"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    async function login() {
       const phone = document.getElementById("phone").value.trim();
       const errorText = document.getElementById("errorText");
 
-      // ตรวจสอบรูปแบบเบอร์โทร (ต้องมี 10 หลัก)
+      // ✅ ตรวจสอบเบอร์โทร (ต้องขึ้นต้นด้วย 0 และมี 10 หลัก)
       if (!/^0[0-9]{9}$/.test(phone)) {
         errorText.style.visibility = "visible";
         return;
       }
-
-      // ซ่อนข้อความผิดพลาด
       errorText.style.visibility = "hidden";
 
-      // ✅ เก็บเบอร์ลูกค้าไว้ใน localStorage
-      localStorage.setItem("active_customer", phone);
+      try {
+        // ✅ ตรวจสอบว่ามีลูกค้าใน Firebase หรือยัง
+        const ref = db.ref("customers/" + phone);
+        const snapshot = await ref.once("value");
 
-      // ✅ ถ้าไม่มีข้อมูลลูกค้านี้ ให้สร้างข้อมูลใหม่อัตโนมัติ
-      let balances = JSON.parse(localStorage.getItem("customer_balances")) || {};
-      if (!balances[phone]) balances[phone] = 0;
-      localStorage.setItem("customer_balances", JSON.stringify(balances));
+        if (!snapshot.exists()) {
+          await ref.set({
+            phone: phone,
+            balance: 0,
+            createdAt: new Date().toLocaleString("th-TH"),
+            lastTransaction: "ยังไม่มีธุรกรรม"
+          });
+        }
 
-      // ✅ ไปหน้าแรกโดยไม่แสดง alert
-      window.location.href = "index.html";
+        // ✅ เก็บเบอร์ลูกค้าใน localStorage
+        localStorage.setItem("active_customer", phone);
+
+        // ✅ ไปหน้า index.html
+        window.location.href = "index.html";
+
+      } catch (err) {
+        alert("❌ เกิดข้อผิดพลาด: " + err.message);
+      }
     }
   </script>
 </body>
