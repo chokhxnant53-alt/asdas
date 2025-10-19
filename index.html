@@ -38,6 +38,22 @@
     .amount { font-size: 36px; font-weight: bold; color: black; }
     .subtext { color: #555; font-size: 14px; margin-bottom: 10px; }
 
+    .wallet-buttons {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
+    .wallet button {
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-weight: bold;
+      cursor: pointer;
+      background-color: #ffeb3b;
+      transition: 0.2s;
+    }
+    .wallet button:hover { background-color: #fdd835; }
+
     .section { margin: 25px; }
     .section h3 { margin-bottom: 10px; }
     .grid {
@@ -70,6 +86,7 @@
     }
     .news img { width: 40px; height: 40px; }
 
+    /* ✅ Footer ดีไซน์ใหม่ */
     footer {
       position: fixed;
       bottom: 0;
@@ -123,6 +140,7 @@
     <h3>กระเป๋าเงิน Flash</h3>
     <div class="amount" id="balance">0.00</div>
     <div class="subtext" id="customerInfo">เบอร์: -</div>
+    
   </div>
 
   <div class="section">
@@ -162,20 +180,17 @@
   </footer>
 
   <script>
-    // ✅ โหลดข้อมูลลูกค้าและยอดเงิน
     const balances = JSON.parse(localStorage.getItem("customer_balances")) || {};
     const activeCustomer = localStorage.getItem("active_customer");
     const display = document.getElementById("balance");
     const info = document.getElementById("customerInfo");
     let customerData = JSON.parse(localStorage.getItem("customer_data")) || {};
 
-    // ✅ ตรวจสอบการล็อกอิน
+    // ✅ ตรวจสอบลูกค้า
     if (!activeCustomer) {
-      alert("⚠️ กรุณาเข้าสู่ระบบก่อนเข้าใช้งาน");
       window.location.href = "login-customer.html";
     } else {
       info.textContent = `เบอร์: ${activeCustomer}`;
-
       if (!customerData[activeCustomer]) {
         customerData[activeCustomer] = {
           phone: activeCustomer,
@@ -186,21 +201,24 @@
       } else {
         customerData[activeCustomer].wallet_balance = balances[activeCustomer] || 0;
       }
-
       localStorage.setItem("customer_data", JSON.stringify(customerData));
       updateDisplay();
     }
 
-    // ✅ ฟังก์ชันแสดงยอดปัจจุบัน
     function updateDisplay() {
       const balance = balances[activeCustomer] || 0;
       display.textContent = balance.toLocaleString("th-TH", { minimumFractionDigits: 2 });
     }
 
-    // ✅ โหลดยอดล่าสุดทุกครั้งเมื่อเปิดหน้า
-    window.addEventListener("load", updateDisplay);
+    function addTransaction(type, amount, status) {
+      const key = `transactions_${activeCustomer}`;
+      const list = JSON.parse(localStorage.getItem(key)) || [];
+      const entry = { date: new Date().toLocaleString("th-TH"), type, amount, status };
+      list.unshift(entry);
+      localStorage.setItem(key, JSON.stringify(list));
+    }
 
-    // ✅ Footer active อัตโนมัติ
+    // ✅ Footer Active อัตโนมัติ
     document.querySelectorAll("footer a").forEach(a => {
       if (a.href.includes(location.pathname.split("/").pop())) {
         a.classList.add("active");
