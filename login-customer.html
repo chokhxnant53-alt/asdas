@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="https://flashexpress.com/favicon.ico" type="image/x-icon">
   <title>เข้าสู่ระบบลูกค้า | Flash Express</title>
+
   <style>
     body {
       font-family: "Prompt", sans-serif;
@@ -15,6 +16,7 @@
       height: 100vh;
       margin: 0;
     }
+
     .box {
       background: white;
       padding: 30px 25px;
@@ -24,12 +26,14 @@
       width: 320px;
       max-width: 90%;
     }
+
     h2 {
       margin-top: 0;
       color: #333;
       font-size: 20px;
       font-weight: 600;
     }
+
     input {
       width: 100%;
       padding: 12px;
@@ -45,6 +49,7 @@
       border-color: #ffeb3b;
       box-shadow: 0 0 6px rgba(255, 235, 59, 0.8);
     }
+
     button {
       width: 100%;
       padding: 12px;
@@ -56,9 +61,16 @@
       font-size: 16px;
       transition: 0.2s;
     }
-    button:hover { background-color: #fdd835; }
-    .logo { width: 80px; margin-bottom: 10px; }
+    button:hover {
+      background-color: #fdd835;
+    }
 
+    .logo {
+      width: 80px;
+      margin-bottom: 10px;
+    }
+
+    /* 🔁 โหลดกำลังเข้าสู่ระบบ */
     .loading {
       display: none;
       position: fixed;
@@ -69,14 +81,17 @@
       flex-direction: column;
       z-index: 9999;
     }
+
     .loading img {
       width: 70px;
       animation: spin 1.3s linear infinite;
     }
+
     @keyframes spin {
       from { transform: rotate(0deg); }
       to { transform: rotate(360deg); }
     }
+
     .loading p {
       margin-top: 10px;
       font-weight: bold;
@@ -93,64 +108,53 @@
     <button onclick="login()">เข้าสู่ระบบ</button>
   </div>
 
+  <!-- 🔁 โหลดระหว่างเข้าสู่ระบบ -->
   <div class="loading" id="loadingBox">
     <img src="https://flashexpress.com/favicon.ico" alt="Loading">
     <p>กำลังเข้าสู่ระบบ...</p>
   </div>
 
-  <!-- ✅ Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js"></script>
-
   <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyALSOECmTwrVr0RQAp_b632HmxQ0sJvLMw",
-      authDomain: "flash-claim-system.firebaseapp.com",
-      databaseURL: "https://flash-claim-system-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "flash-claim-system",
-      storageBucket: "flash-claim-system.firebasestorage.app",
-      messagingSenderId: "369180040049",
-      appId: "1:369180040049:web:6753f5e48a23bc6737b4d0",
-      measurementId: "G-VLVBY60G3Q"
-    };
-
-    // ✅ ป้องกัน initialize ซ้ำ
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-    const db = firebase.database();
-
-    async function login() {
+    function login() {
       const phone = document.getElementById("phone").value.trim();
-      const loading = document.getElementById("loadingBox");
 
+      // ✅ ตรวจสอบเบอร์โทร
       if (!/^0\d{9}$/.test(phone)) {
         alert("⚠️ กรุณากรอกเบอร์โทรให้ถูกต้อง (10 หลัก)");
         return;
       }
 
+      // ✅ แสดงเอฟเฟกต์โหลด
+      const loading = document.getElementById("loadingBox");
       loading.style.display = "flex";
 
-      try {
-        const ref = db.ref("customers/" + phone);
-        const snapshot = await ref.once("value");
+      // ✅ เก็บเบอร์ไว้ใน localStorage
+      localStorage.setItem("active_customer", phone);
 
-        if (!snapshot.exists()) {
-          await ref.set({
-            phone: phone,
-            balance: 0,
-            createdAt: new Date().toLocaleString("th-TH"),
-            lastTransaction: "ยังไม่มีธุรกรรม"
-          });
-        }
+      // ✅ ตรวจสอบหรือสร้างข้อมูลลูกค้า
+      const balances = JSON.parse(localStorage.getItem("customer_balances")) || {};
+      if (!balances[phone]) balances[phone] = 0;
+      localStorage.setItem("customer_balances", JSON.stringify(balances));
 
-        localStorage.setItem("active_customer", phone);
-        loading.style.display = "none";
+// ✅ เพิ่มข้อมูลลูกค้าใหม่ลงฐานข้อมูลรวม customer_data
+let customerData = JSON.parse(localStorage.getItem("customer_data")) || {};
+
+if (!customerData[phone]) {
+  customerData[phone] = {
+    phone: phone,
+    createdAt: new Date().toLocaleString("th-TH"),
+    wallet_balance: balances[phone],
+    lastTransaction: "ยังไม่มีธุรกรรม"
+  };
+  localStorage.setItem("customer_data", JSON.stringify(customerData));
+}
+
+
+
+      // ✅ จำลองโหลด 1.5 วิ แล้วเข้าเว็บหลัก
+      setTimeout(() => {
         window.location.href = "index.html";
-      } catch (error) {
-        alert("❌ เกิดข้อผิดพลาด: " + error.message);
-        loading.style.display = "none";
-      }
+      }, 1500);
     }
   </script>
 </body>

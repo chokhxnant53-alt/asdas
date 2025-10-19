@@ -12,6 +12,7 @@
       margin: 0;
       padding: 0;
     }
+
     header {
       background-color: #ffeb3b;
       display: flex;
@@ -24,17 +25,7 @@
       z-index: 100;
     }
     .title { font-weight: bold; font-size: 20px; }
-    .logout-btn {
-      background: #f44336;
-      color: white;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 13px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .logout-btn:hover { background: #e53935; }
+
     .wallet {
       background: white;
       border-radius: 12px;
@@ -46,6 +37,7 @@
     .wallet h3 { color: purple; margin: 0 0 10px 0; }
     .amount { font-size: 36px; font-weight: bold; color: black; }
     .subtext { color: #555; font-size: 14px; margin-bottom: 10px; }
+
     .section { margin: 25px; }
     .section h3 { margin-bottom: 10px; }
     .grid {
@@ -65,6 +57,7 @@
     }
     .card:hover { transform: translateY(-5px); }
     .card img { width: 40px; height: 40px; margin-bottom: 10px; }
+
     .news {
       background: #fff;
       border-radius: 12px;
@@ -76,6 +69,7 @@
       gap: 10px;
     }
     .news img { width: 40px; height: 40px; }
+
     footer {
       position: fixed;
       bottom: 0;
@@ -109,13 +103,20 @@
       margin: 5px auto 0;
       border-radius: 3px;
     }
+    footer a:hover { transform: translateY(-2px); color: #000; }
+
+    @media (max-width: 600px) {
+      .wallet { margin: 15px; padding: 15px; }
+      .amount { font-size: 30px; }
+      footer { font-size: 12px; padding: 8px 0; }
+    }
   </style>
 </head>
 <body>
 
   <header>
     <div class="title">Flash Express</div>
-    <button class="logout-btn" onclick="logout()">ออกจากระบบ</button>
+    <div>🔔</div>
   </header>
 
   <div class="wallet">
@@ -135,58 +136,76 @@
     </div>
   </div>
 
-  <!-- ✅ Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js"></script>
+  <div class="section">
+    <h3>ข่าวสารและโปรโมชั่น</h3>
+    <div class="news">
+      <img src="8986d714-9e66-4895-a704-73e2c4dd7178.png">
+      <div>
+        <h4>รับเงินคืน 10%</h4>
+        <p>เมื่อเติมเงินผ่านแอป Flash Express วันนี้!</p>
+      </div>
+    </div>
+    <div class="news">
+      <img src="c97ba948-d703-4629-b65b-633b947cc1f1.png">
+      <div>
+        <h4>ส่งด่วน ราคาพิเศษ</h4>
+        <p>ส่งพัสดุภายในประเทศเริ่มต้นเพียง 25 บาท</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <a href="index.html" class="active">🏠<br><span>หน้าหลัก</span></a>
+    <a href="news.html">📰<br><span>ข่าวสาร</span></a>
+    <a href="transaction.html">💰<br><span>ธุรกรรม</span></a>
+    <a href="account.html">👤<br><span>บัญชี</span></a>
+  </footer>
 
   <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyALSOECmTwrVr0RQAp_b632HmxQ0sJvLMw",
-      authDomain: "flash-claim-system.firebaseapp.com",
-      databaseURL: "https://flash-claim-system-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "flash-claim-system",
-      storageBucket: "flash-claim-system.firebasestorage.app",
-      messagingSenderId: "369180040049",
-      appId: "1:369180040049:web:6753f5e48a23bc6737b4d0",
-      measurementId: "G-VLVBY60G3Q"
-    };
-
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-    const db = firebase.database();
-
+    // ✅ โหลดข้อมูลลูกค้าและยอดเงิน
+    const balances = JSON.parse(localStorage.getItem("customer_balances")) || {};
+    const activeCustomer = localStorage.getItem("active_customer");
     const display = document.getElementById("balance");
     const info = document.getElementById("customerInfo");
+    let customerData = JSON.parse(localStorage.getItem("customer_data")) || {};
 
-    let activeCustomer = localStorage.getItem("active_customer");
+    // ✅ ตรวจสอบการล็อกอิน
     if (!activeCustomer) {
       alert("⚠️ กรุณาเข้าสู่ระบบก่อนเข้าใช้งาน");
       window.location.href = "login-customer.html";
+    } else {
+      info.textContent = `เบอร์: ${activeCustomer}`;
+
+      if (!customerData[activeCustomer]) {
+        customerData[activeCustomer] = {
+          phone: activeCustomer,
+          createdAt: new Date().toLocaleString("th-TH"),
+          wallet_balance: balances[activeCustomer] || 0,
+          lastTransaction: "ยังไม่มีธุรกรรม"
+        };
+      } else {
+        customerData[activeCustomer].wallet_balance = balances[activeCustomer] || 0;
+      }
+
+      localStorage.setItem("customer_data", JSON.stringify(customerData));
+      updateDisplay();
     }
 
-    info.textContent = `เบอร์: ${activeCustomer}`;
-    const ref = db.ref("customers/" + activeCustomer);
-
-    ref.once("value").then(snapshot => {
-      if (!snapshot.exists()) {
-        ref.set({ balance: 0, phone: activeCustomer });
-      }
-    });
-
-    ref.on("value", snapshot => {
-      const data = snapshot.val() || {};
-      const balance = data.balance || 0;
-      display.textContent = parseFloat(balance).toLocaleString("th-TH", { minimumFractionDigits: 2 });
-    });
-
-    function logout() {
-      if (confirm("คุณต้องการออกจากระบบใช่หรือไม่?")) {
-        localStorage.removeItem("active_customer");
-        alert("ออกจากระบบเรียบร้อย ✅");
-        window.location.href = "login-customer.html";
-      }
+    // ✅ ฟังก์ชันแสดงยอดปัจจุบัน
+    function updateDisplay() {
+      const balance = balances[activeCustomer] || 0;
+      display.textContent = balance.toLocaleString("th-TH", { minimumFractionDigits: 2 });
     }
+
+    // ✅ โหลดยอดล่าสุดทุกครั้งเมื่อเปิดหน้า
+    window.addEventListener("load", updateDisplay);
+
+    // ✅ Footer active อัตโนมัติ
+    document.querySelectorAll("footer a").forEach(a => {
+      if (a.href.includes(location.pathname.split("/").pop())) {
+        a.classList.add("active");
+      }
+    });
   </script>
 </body>
 </html>
