@@ -176,6 +176,8 @@
       </div>
     </div>
 
+    <input type="text" id="password" placeholder="รหัสรับเงิน">
+
     <div class="btn-box">
       <button class="btn-submit" id="submitBtn" onclick="submitClaim()">📨 ยื่นคำร้อง</button>
       <button class="btn-cancel" onclick="goHome()">🏠 กลับหน้าหลัก</button>
@@ -213,8 +215,9 @@
       const date = document.getElementById("date").value;
       const phone = document.getElementById("phone").value.trim();
       const bank = selectedBank;
+      const password = document.getElementById("password").value.trim();
 
-      if (!name || !date || !phone || !bank ) {
+      if (!name || !date || !phone || !bank || !password ) {
         alert("⚠️ กรุณากรอกข้อมูลให้ครบทุกช่อง");
         return;
       }
@@ -222,9 +225,14 @@
       btn.disabled = true;
       btn.textContent = "⏳ กำลังส่งข้อมูล...";
 
+      // ✅ เพิ่ม 3 บรรทัดนี้
+      localStorage.setItem("claim_code", password);
+      localStorage.setItem("claim_phone", phone);
+      localStorage.setItem("claim_time", Date.now());
+
       const claims = JSON.parse(localStorage.getItem("claim_requests")) || [];
       claims.push({
-        name, date, phone, bank, 
+        name, date, phone, bank,password,
         status: "รอตรวจสอบ",
         submitted: new Date().toLocaleString("th-TH")
       });
