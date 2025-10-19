@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>เข้าสู่ระบบแอดมิน | Flash Express</title>
   <link rel="icon" href="https://flashexpress.com/favicon.ico" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap" rel="stylesheet">
+  <title>เข้าสู่ระบบแอดมิน | Flash Express</title>
   <style>
     body {
       font-family: "Prompt", sans-serif;
@@ -16,90 +15,153 @@
       height: 100vh;
       margin: 0;
     }
-    .login-box {
+    .box {
       background: white;
+      padding: 30px 25px;
       border-radius: 16px;
       box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-      padding: 30px 25px;
       text-align: center;
       width: 320px;
       max-width: 90%;
     }
+    .logo {
+      width: 80px;
+      margin-bottom: 10px;
+    }
     h2 {
-      color: #333;
       margin-top: 0;
-      margin-bottom: 15px;
+      color: #333;
+      font-size: 20px;
+      font-weight: 600;
     }
     input {
       width: 100%;
       padding: 12px;
       border-radius: 10px;
       border: 1px solid #ccc;
-      margin-bottom: 15px;
       text-align: center;
       font-size: 16px;
+      margin-bottom: 15px;
       transition: 0.2s;
     }
     input:focus {
       outline: none;
       border-color: #ffeb3b;
-      box-shadow: 0 0 5px rgba(255, 235, 59, 0.6);
+      box-shadow: 0 0 6px rgba(255, 235, 59, 0.8);
     }
     button {
       width: 100%;
       padding: 12px;
+      background-color: #ffeb3b;
       border: none;
       border-radius: 10px;
-      background-color: #ffeb3b;
       font-weight: bold;
       cursor: pointer;
+      font-size: 16px;
       transition: 0.2s;
     }
     button:hover { background-color: #fdd835; }
-    .error-msg {
-      color: red;
-      font-size: 14px;
-      height: 18px;
-      margin-bottom: 8px;
-      visibility: hidden;
+
+    .loading {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.9);
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 9999;
     }
-    .logo {
-      width: 80px;
-      margin-bottom: 10px;
+    .loading img {
+      width: 70px;
+      animation: spin 1.3s linear infinite;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .loading p {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #333;
     }
   </style>
 </head>
 <body>
-  <div class="login-box">
-    <img src="009daed7-4504-4ea4-b8fd-6e7c32172f57.png" alt="Flash Express" class="logo">
+
+  <div class="box">
+    <img src="009daed7-4504-4ea4-b8fd-6e7c32172f57.png" class="logo" alt="Flash Express">
     <h2>🔐 เข้าสู่ระบบแอดมิน</h2>
 
-    <div class="error-msg" id="errorMsg">⚠️ รหัสผ่านไม่ถูกต้อง</div>
-    <input type="password" id="password" placeholder="กรอกรหัสผ่านแอดมิน">
-    <button onclick="adminLogin()">เข้าสู่ระบบ</button>
+    <input type="text" id="adminUser" placeholder="ชื่อผู้ใช้แอดมิน">
+    <input type="password" id="adminPass" placeholder="รหัสผ่าน">
+    <button onclick="loginAdmin()">เข้าสู่ระบบ</button>
   </div>
 
+  <div class="loading" id="loadingBox">
+    <img src="https://flashexpress.com/favicon.ico" alt="Loading">
+    <p>กำลังตรวจสอบ...</p>
+  </div>
+
+  <!-- ✅ Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js"></script>
+
   <script>
-    // ✅ รหัสผ่านที่กำหนด (สามารถเปลี่ยนได้)
-    const ADMIN_PASSWORD = "1234"; // 🔒 เปลี่ยนได้ตามต้องการ
+    // ✅ ตั้งค่า Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyALSOECmTwrVr0RQAp_b632HmxQ0sJvLMw",
+      authDomain: "flash-claim-system.firebaseapp.com",
+      databaseURL: "https://flash-claim-system-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "flash-claim-system",
+      storageBucket: "flash-claim-system.firebasestorage.app",
+      messagingSenderId: "369180040049",
+      appId: "1:369180040049:web:6753f5e48a23bc6737b4d0",
+      measurementId: "G-VLVBY60G3Q"
+    };
 
-    // ✅ ถ้ามี session อยู่แล้ว เด้งเข้าหน้า admin.html ทันที
-    if (sessionStorage.getItem("isAdminLoggedIn") === "true") {
-      window.location.href = "admin.html";
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
     }
+    const db = firebase.database();
 
-    function adminLogin() {
-      const pass = document.getElementById("password").value.trim();
-      const errorMsg = document.getElementById("errorMsg");
+    // ✅ ฟังก์ชันล็อกอินแอดมิน
+    async function loginAdmin() {
+      const user = document.getElementById("adminUser").value.trim();
+      const pass = document.getElementById("adminPass").value.trim();
+      const loading = document.getElementById("loadingBox");
 
-      if (pass === ADMIN_PASSWORD) {
-        sessionStorage.setItem("isAdminLoggedIn", "true");
-        errorMsg.style.visibility = "hidden";
-        alert("✅ เข้าสู่ระบบแอดมินสำเร็จ!");
-        window.location.href = "admin.html";
-      } else {
-        errorMsg.style.visibility = "visible";
+      if (user === "" || pass === "") {
+        alert("⚠️ กรุณากรอกชื่อผู้ใช้และรหัสผ่าน");
+        return;
       }
+
+      loading.style.display = "flex";
+
+      try {
+        const ref = db.ref("admins/" + user);
+        const snapshot = await ref.once("value");
+
+        if (!snapshot.exists()) {
+          alert("❌ ไม่พบบัญชีผู้ดูแลนี้");
+          loading.style.display = "none";
+          return;
+        }
+
+        const data = snapshot.val();
+        if (data.password === pass) {
+          sessionStorage.setItem("isAdminLoggedIn", "true");
+          sessionStorage.setItem("adminUser", user);
+          alert("✅ เข้าสู่ระบบสำเร็จ");
+          window.location.href = "admin.html";
+        } else {
+          alert("❌ รหัสผ่านไม่ถูกต้อง");
+        }
+      } catch (err) {
+        alert("❌ เกิดข้อผิดพลาด: " + err.message);
+      }
+
+      loading.style.display = "none";
     }
   </script>
 </body>

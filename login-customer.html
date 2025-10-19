@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="https://flashexpress.com/favicon.ico" type="image/x-icon">
   <title>เข้าสู่ระบบลูกค้า | Flash Express</title>
-
   <style>
     body {
       font-family: "Prompt", sans-serif;
@@ -60,7 +59,6 @@
     button:hover { background-color: #fdd835; }
     .logo { width: 80px; margin-bottom: 10px; }
 
-    /* โหลด */
     .loading {
       display: none;
       position: fixed;
@@ -95,13 +93,12 @@
     <button onclick="login()">เข้าสู่ระบบ</button>
   </div>
 
-  <!-- โหลด -->
   <div class="loading" id="loadingBox">
     <img src="https://flashexpress.com/favicon.ico" alt="Loading">
     <p>กำลังเข้าสู่ระบบ...</p>
   </div>
 
-  <!-- Firebase SDK -->
+  <!-- ✅ Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js"></script>
 
@@ -116,7 +113,11 @@
       appId: "1:369180040049:web:6753f5e48a23bc6737b4d0",
       measurementId: "G-VLVBY60G3Q"
     };
-    firebase.initializeApp(firebaseConfig);
+
+    // ✅ ป้องกัน initialize ซ้ำ
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
     const db = firebase.database();
 
     async function login() {
@@ -146,7 +147,6 @@
         localStorage.setItem("active_customer", phone);
         loading.style.display = "none";
         window.location.href = "index.html";
-
       } catch (error) {
         alert("❌ เกิดข้อผิดพลาด: " + error.message);
         loading.style.display = "none";
