@@ -24,7 +24,19 @@
       top: 0;
       z-index: 100;
     }
+
     .title { font-weight: bold; font-size: 20px; }
+    .logout-btn {
+      background: #f44336;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .logout-btn:hover { background: #e53935; }
 
     .wallet {
       background: white;
@@ -116,7 +128,7 @@
 
   <header>
     <div class="title">Flash Express</div>
-    <div>🔔</div>
+    <button class="logout-btn" onclick="logout()">ออกจากระบบ</button>
   </header>
 
   <div class="wallet">
@@ -207,6 +219,15 @@
       const balance = data.balance || 0;
       display.textContent = parseFloat(balance).toLocaleString("th-TH", { minimumFractionDigits: 2 });
     });
+
+    // ✅ ปุ่มออกจากระบบ
+    function logout() {
+      if (confirm("คุณต้องการออกจากระบบใช่หรือไม่?")) {
+        localStorage.removeItem("active_customer");
+        alert("ออกจากระบบเรียบร้อย ✅");
+        window.location.href = "login-customer.html";
+      }
+    }
 
     // ✅ Footer active
     document.querySelectorAll("footer a").forEach(a => {
